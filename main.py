@@ -67,26 +67,26 @@ class Character:
         return [self.strength, self.intelligence, self.stamina, self.agility]  # Extend this list if there are more stats
     
 total_characters = [
-    Character(name="Jonathan Davis", strength_value= 50, intelligence_value=50, stamina_value=10, agility_value=10),
-    Character(name="Fred Durst", strength_value=50, intelligence_value=10, stamina_value=30, agility_value=30),
-    Character(name="Solana SZA", strength_value=30, intelligence_value=40, stamina_value=20, agility_value=30),
-    Character(name="Soobin Choi", strength_value=20, intelligence_value=20, stamina_value=45, agility_value=35),
-    Character(name="Chappell Roan", strength_value=30, intelligence_value=30, stamina_value=30, agility_value=30),
-    Character(name="Sabrina Carpenter", strength_value=40, intelligence_value=20, stamina_value=30, agility_value=30),
-    Character(name="Beyoncé", strength_value=30, intelligence_value=30, stamina_value=30, agility_value=30),
-    Character(name="Ariana Grande", strength_value=50, intelligence_value=30, stamina_value=20, agility_value=30),
-    Character(name="Theo James", strength_value=30, intelligence_value=40, stamina_value=30, agility_value=30),
-    Character(name="Anne Hathaway", strength_value=20, intelligence_value=20, stamina_value=30, agility_value=50)
+    Character(name="Jonathan Davis", strength_value= 40, intelligence_value=50, stamina_value=20, agility_value=10),
+    Character(name="Fred Durst", strength_value=50, intelligence_value=10, stamina_value=35, agility_value=25),
+    Character(name="Solana SZA", strength_value=25, intelligence_value=40, stamina_value=20, agility_value=35),
+    Character(name="Soobin Choi", strength_value=15, intelligence_value=25, stamina_value=45, agility_value=35),
+    Character(name="Chappell Roan", strength_value=20, intelligence_value=35, stamina_value=40, agility_value=25),
+    Character(name="Sabrina Carpenter", strength_value=40, intelligence_value=20, stamina_value=25, agility_value=35),
+    Character(name="Beyoncé", strength_value=35, intelligence_value=40, stamina_value=20, agility_value=25),
+    Character(name="Ariana Grande", strength_value=50, intelligence_value=35, stamina_value=20, agility_value=25),
+    Character(name="Theo James", strength_value=35, intelligence_value=45, stamina_value=20, agility_value=30),
+    Character(name="Anne Hathaway", strength_value=15, intelligence_value=25, stamina_value=30, agility_value=50)
 ]
 
 class Event:
     def __init__(self, primary_attribute, secondary_attribute, prompt_text, pass_message, fail_message, partial_pass_message):
-        self.primary_attribute = primary_attribute,
-        self.secondary_attribute = secondary_attribute,
-        self.prompt_text = prompt_text,
-        self.pass_message = pass_message,
-        self.fail_message = fail_message,
-        self.partial_pass_message = partial_pass_message,
+        self.primary_attribute = primary_attribute
+        self.secondary_attribute = secondary_attribute
+        self.prompt_text = prompt_text
+        self.pass_message = pass_message
+        self.fail_message = fail_message
+        self.partial_pass_message = partial_pass_message
         self.status = EventStatus.UNKNOWN
 
     def execute(self, party: List[Character], parser, game):
@@ -103,6 +103,16 @@ class Event:
             self.status = EventStatus.PARTIAL_PASS
             print(self.partial_pass_message)
         else: 
+        # Instead of outright failing, give a secondary challenge
+            if random.random() < 0.5:  # 50% chance to let them try again with another stat
+                print("You nearly made a mistake, but you're given the opputunity to try again...")
+                new_stat = game.parser.select_stat(character)  # Re-select a stat
+                if new_stat.name in [self.primary_attribute, self.secondary_attribute]:
+                    print("💡 You found another way to complete the task!")
+                    self.status = EventStatus.PARTIAL_PASS
+                    print(self.partial_pass_message)
+                    return
+        
             self.status = EventStatus.FAIL 
             print(self.fail_message)
 
@@ -117,10 +127,10 @@ class Event:
                 game.opposing_team.remove(eliminated_enemy)
                 print(f"You eliminated {eliminated_enemy.name} from the opposing team!")    
       
-        if game.party:
-            eliminated_player = random.choice(game.party)
-            game.party.remove(eliminated_player)
-            print(f"{eliminated_player.name} has been captured and removed from your team!")
+        if self.status == EventStatus.FAIL:
+            if character in game.party:
+                game.party.remove(character)
+                print(f"{character.name} has been captured and removed from your team!")
 
         if not game.party:
             print("❌ Your entire team has been captured! GAME OVER.")
@@ -193,8 +203,8 @@ def create_mid_events():
             partial_pass_message="You surprise them, but they escape injured!"
         ),
         Event(
-            primary_attribute="Stealth",
-            secondary_attribute="Agility",
+            primary_attribute="Agility",
+            secondary_attribute="Stamina",
             prompt_text="You attempt to hide in the shadows. Do you succeed?",
             pass_message="You blend perfectly into the shadows.",
             fail_message="You fail and are noticed.",

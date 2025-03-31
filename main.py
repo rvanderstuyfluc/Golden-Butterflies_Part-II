@@ -433,7 +433,6 @@ class UserInputParser:
     def parse(self, prompt: str) -> str:
         return input(prompt)
 
-
     def make_your_party(self, total_characters: List[Character]) -> Tuple[List[Character], List[Character]]:
         unchosen_characters = total_characters.copy()
         while len(self.party) < self.max_party_size:
@@ -453,21 +452,37 @@ class UserInputParser:
         return self.party, unchosen_characters
 
     def select_party_member(self, party: List[Character]) -> Character:
-        print("Choose a party member:")
-        for idx, member in enumerate(party):
-            print(f"{idx + 1}. {member.name}")
-        choice = int(self.parse("Enter the number of the chosen party member: ")) - 1
-        return party[choice]
+        while True:
+            print("Choose a party member:")
+            for idx, member in enumerate(party):
+                print(f"{idx + 1}. {member.name}")
+            user_input = self.parse("Enter the number of the chosen party member: ")
+
+            if user_input.isdigit():  # Ensures the input is a valid number
+                choice = int(user_input) - 1
+                if 0 <= choice < len(party):  # Ensures the number is in range
+                    return party[choice]
+                else:
+                    print("❌ Invalid choice. Please enter a number from the list.")
+            else:
+                print("❌ Invalid input. Please enter a number.")
 
     def select_stat(self, character: Character) -> Statistic:
-        print(f"Choose a stat for {character.name}:")
-        stats = character.get_stats()
-        for idx, stat in enumerate(stats):
-            print(f"{idx + 1}. {stat.name} ({stat.value})")
-        choice = int(self.parse("Enter the number of the stat to use: ")) - 1
-        return stats[choice]
+        while True:
+            print(f"Choose a stat for {character.name}:")
+            stats = character.get_stats()
+            for idx, stat in enumerate(stats):
+                print(f"{idx + 1}. {stat.name} ({stat.value})")
+            user_input = self.parse("Enter the number of the stat to use: ")
 
-
+            if user_input.isdigit():  # Check if input is a valid number
+                choice = int(user_input) - 1
+                if 0 <= choice < len(stats):  # Ensure input is within valid range
+                    return stats[choice]
+                else:
+                    print("❌ Invalid choice. Please enter a number from the list.")
+            else:
+                print("❌ Invalid input. Please enter a number.")    
 
 def start_game():
     parser = UserInputParser(max_party_size=5)

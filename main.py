@@ -15,11 +15,11 @@ def increment():
     return jsonify({'count': count})
 
 
-# @app.route('/flip_case', methods=['POST'])
-# def flip_case():
-#     text = request.json['text']
-#     flipped_text = ''.join(c.lower() if c.isupper() else c.upper() for c in text)
-#     return jsonify({'flipped_text': flipped_text})
+@app.route('/flip_case', methods=['POST'])
+def flip_case():
+    text = request.json['text']
+    flipped_text = ''.join(c.lower() if c.isupper() else c.upper() for c in text)
+    return jsonify({'flipped_text': flipped_text})
 
 import json
 import sys
@@ -506,8 +506,8 @@ def start_game():
         print(f"{character.name}")
 
 
-if __name__ == "__main__":
-    start_game()
+# if __name__ == "__main__":
+#     start_game()
 
 if __name__ == '__main__':
     app.run(debug=True)

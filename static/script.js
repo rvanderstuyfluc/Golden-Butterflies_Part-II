@@ -25,3 +25,17 @@ flipButton.addEventListener('click', function() {
       console.log(error);
     });
 });
+// 🏁 Start Game (Capture the Flag)
+const startGameButton = document.getElementById('startGame');
+const gameOutput = document.getElementById('gameOutput');
+
+startGameButton.addEventListener('click', function () {
+  axios.post('/play_game')
+    .then(function (response) {
+      gameOutput.textContent = response.data.output;
+    })
+    .catch(function (error) {
+      console.log(error);
+      gameOutput.textContent = "There was an error starting the game.";
+    });
+});

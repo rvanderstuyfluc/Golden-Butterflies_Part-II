@@ -1,7 +1,7 @@
 
 import io
 from contextlib import redirect_stdout
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request # type: ignore
 
 app = Flask(__name__)
 
@@ -98,7 +98,7 @@ total_characters = [
 ]
 
 class Event:
-    def __init__(self, primary_attribute, secondary_attribute, prompt_text, pass_message, fail_message, partial_pass_message):
+    def __init__(self, primary_attribute, secondary_attribute, prompt_text, pass_message, fail_message, partial_pass_message, win_condition=False):
         self.primary_attribute = primary_attribute
         self.secondary_attribute = secondary_attribute
         self.prompt_text = prompt_text
@@ -106,6 +106,7 @@ class Event:
         self.fail_message = fail_message
         self.partial_pass_message = partial_pass_message
         self.status = EventStatus.UNKNOWN
+        self.win_condition = win_condition  # ← 🔥 ADD THIS HERE
 
     def execute(self, party: List[Character], parser, game):
         print(self.prompt_text)
@@ -135,7 +136,7 @@ class Event:
             print(self.fail_message)
 
         # Winning condition
-        if "win the game" in self.pass_message:
+        if self.win_condition:
             print("🏆 You captured the flag and WON the game!")
             game.continue_playing = False
 
@@ -254,7 +255,9 @@ def create_final_events():
             prompt_text="With the flag in hand, you sprint back toward your base. How do you push through?",
             pass_message="You cross the finish line! Your team wins the game!",
             partial_pass_message="You’re close but get surrounded. Time to fight!",
-            fail_message="You’re tackled, lose the flag, and one teammate is captured!")
+            fail_message="You’re tackled, lose the flag, and one teammate is captured!",
+            win_condition=True 
+        )
     ]
 
 class Game:
@@ -298,6 +301,9 @@ class Game:
                 self.deactivate_invisibility()
         
         print("Game Over.")
+        # ✅ Check if they won (still have party members)
+        if not self.continue_playing and self.party:
+            print("🎉 You reached the end and won!")
 
     def check_team_synergy(self):
         print("✨ Checking team synergy!")

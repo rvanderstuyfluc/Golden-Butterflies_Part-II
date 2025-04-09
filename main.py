@@ -2,12 +2,15 @@
 import io
 from contextlib import redirect_stdout
 from flask import Flask, jsonify, render_template, request # type: ignore
+import json
+import sys
+import random
+from typing import List, Optional, Tuple
+from enum import Enum
+import os
+count = 0
 
 app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Hello, Flask!"
 
 @app.route('/play_game', methods=['POST'])
 def play_game():
@@ -16,11 +19,6 @@ def play_game():
         start_game()
     output = f.getvalue()
     return jsonify({'output': output})
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-count = 0
 
 @app.route('/')
 def index():
@@ -38,14 +36,6 @@ def flip_case():
     text = request.json['text']
     flipped_text = ''.join(c.lower() if c.isupper() else c.upper() for c in text)
     return jsonify({'flipped_text': flipped_text})
-
-import json
-import sys
-import random
-from typing import List, Optional, Tuple
-from enum import Enum
-import os
-
 
 class EventStatus(Enum):
     UNKNOWN = "unknown"
@@ -528,10 +518,6 @@ def start_game():
     print(f"\nYou have chosen the following characters for your party:")
     for character in chosen_party:
         print(f"{character.name}")
-
-
-# if __name__ == "__main__":
-#     start_game()
 
 if __name__ == '__main__':
     app.run(debug=True)

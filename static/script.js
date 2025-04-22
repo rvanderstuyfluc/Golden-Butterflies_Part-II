@@ -26,16 +26,29 @@ flipButton.addEventListener('click', function() {
     });
 });
 // 🏁 Start Game (Capture the Flag)
-const startGameButton = document.getElementById('startGame');
-const gameOutput = document.getElementById('gameOutput');
+const startGameButton = document.getElementById('startGameButton');
+const gameOutputArea = document.getElementById('gameOutputArea');
 
 startGameButton.addEventListener('click', function () {
   axios.post('/play_game')
     .then(function (response) {
-      gameOutput.textContent = response.data.output;
+      gameOutputArea.textContent = response.data.output;
     })
     .catch(function (error) {
       console.log(error);
-      gameOutput.textContent = "There was an error starting the game.";
+      gameOutputArea.textContent = "There was an error starting the game.";
+    });
+});
+
+const gbutton = document.getElementById('myGameButton');
+const gameOutput = document.getElementById('gameOutput');
+
+gbutton.addEventListener('click', function() {
+  axios.post('/increment2')
+    .then(function(response) {
+      gameOutput.textContent = response.data.gcount;
+    })
+    .catch(function(error) {
+      console.log(error);
     });
 });

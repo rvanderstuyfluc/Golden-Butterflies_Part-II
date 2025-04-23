@@ -1,51 +1,137 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
+
 <head>
-  <title>Interactive Button</title>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <meta charset="UTF-8">
+
+    <title>Escape the Dungeon</title>
+
+    <style>
+
+        body {
+
+            background-image: url('/static/images/dungeon1.jpg');
+
+            background-size: cover;
+
+            color: white;
+
+            text-align: center;
+
+            font-family: sans-serif;
+
+            padding-top: 100px;
+
+        }
+
+        input, button {
+
+            padding: 10px;
+
+            font-size: 18px;
+
+        }
+
+    </style>
+
 </head>
+
 <body>
 
-  <div class="container">
-    <h1><i> Welcome to the Maths page!</i></h1>
-    <h3>A working example of Terminal redirected input/output using POST/GET</h3>
-    <h5>This takes input and calls a main.py app route directly via GET</h5>
-    <p>Logic shapes every choice of our daily lives.<br>
-    Logical thinking enables someone to learn and
-    make decisions that affect their way of life. !</p>
-    <form method="GET" action ="/square">
-        Enter a number :
-        <input type="text" name="num" id="num"></input>
-        <input type="submit" name="btnnum" id="btnnum"></input>
-  </form>
-  </div>  
-  
-  <div class="container">
-    <h1>Sources Consulted During this Final Project Work</h1>
-    <a href="https://code.visualstudio.com/docs/python/tutorial-flask">Geek for Geeks Flask To HTTP Tutorial</a> <br>
-    <a href="https://www.youtube.com/watch?v=HP0F5xbUQCQ">You Tube  on Py-script to connect Python to the Web Browser</a> <br> 
-    <a href="https://pyscript.net/">Py-Script Download & Tutorial</a>  <br>
-    <p>Sources consulted: <span id="sponsorLogos">
-      <img src="c:\Downloads\qip.png"> <img src="c:\Downloads\flaskhttp.jpg"> <img src="c:\Downloads\YT.png"> <br>
-      Py-script - Flask HTTP - YouTube on HTTP connect via Py-Script</span>
-    </p>
-  </div>
+    <h1>Escape the Dungeon</h1>
 
-  <div class="container">
-    <h1>Capture the Flag - thru javascript</h1>
-    <button id="startGameButton">Start Game</button>
-    <p>Gameplay area: <span id="gameOutputArea"></p>
-  </div>
+    <h2 id="question">Loading...</h2>
 
-  <div class="container">
-    <h1>Capture the Flag - direct to python</h1>
-    <form method="GET" action ="/play_game">
-    <input type="submit" name="btnStartGame" id="btnStartGame" value="Start Game"></input>
-  </form>
-    <p>New Gameplay area: <span id="NewgameOutput"></p>
-  </div>
-  
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <input id="answer" type="number" placeholder="Your answer" />
+
+    <button onclick="submitAnswer()">Submit</button>
+
+    <p id="result"></p>
+
+ 
+
+    <audio id="correctSound" src="/static/sounds/correct.mp3"></audio>
+
+    <audio id="wrongSound" src="/static/sounds/wrong.mp3"></audio>
+
+ 
+
+    <script>
+
+        let currentAnswer = null;
+
+        let stage = 1;
+
+ 
+
+        async function loadQuestion() {
+
+            const res = await fetch('/get_question');
+
+            const data = await res.json();
+
+            document.getElementById('question').innerText = `Solve: ${data.question}`;
+
+            currentAnswer = data.answer;
+
+        }
+
+ 
+
+        function changeBackground() {
+
+            document.body.style.backgroundImage = `url('/static/images/dungeon${stage}.jpg')`;
+
+        }
+
+ 
+
+        function submitAnswer() {
+
+            const userAnswer = parseInt(document.getElementById('answer').value);
+
+            const resultEl = document.getElementById('result');
+
+            if (userAnswer === currentAnswer) {
+
+                document.getElementById('correctSound').play();
+
+                resultEl.innerText = "Correct! Moving on...";
+
+                stage++;
+
+                if (stage > 3) {
+
+                    resultEl.innerText = "🎉 You escaped the dungeon!";
+
+                } else {
+
+                    changeBackground();
+
+                    loadQuestion();
+
+                }
+
+            } else {
+
+                document.getElementById('wrongSound').play();
+
+                resultEl.innerText = "Wrong! Try again.";
+
+            }
+
+            document.getElementById('answer').value = "";
+
+        }
+
+ 
+
+        window.onload = loadQuestion;
+
+    </script>
+
 </body>
+
 </html>

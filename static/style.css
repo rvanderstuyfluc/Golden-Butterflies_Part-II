@@ -3,6 +3,25 @@
   margin-top: 100px;
 }
 
+#timer, #score {
+  font-size: 24px;
+  margin: 10px;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 10px;
+}
+
+.score-boost {
+  animation: score-pop 0.5s ease;
+  will-change: transform;
+}
+
+.timer-warning {
+  animation: pulse-red 1s infinite;
+  font-weight: bold;
+}
+
 @keyframes pulse-red {
 
   0% { color: red; transform: scale(1); }
@@ -45,16 +64,3 @@ textarea {
   padding: 10px;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 18px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-button:hover {
-  background-color: #45a049;
-}

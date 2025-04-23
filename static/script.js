@@ -1,6 +1,8 @@
 const timerDisplay = document.getElementById("timer");
 const countdown = setInterval(() => {
 
+  timerDisplay.classList.add("timer-warning"); // for timer
+  scoreDisplay.classList.add("score-boost");   // for score
     if (timeLeft <= 0) {
 
         clearInterval(countdown);
@@ -25,20 +27,19 @@ const countdown = setInterval(() => {
 
 }, 1000);
 
-
+const scoreDisplay = document.getElementById("score");
 function addPoints(points) {
 
+  let score = 0;
   score += points;
-
+  if (userAnswer === correctAnswer) {
+    addPoints(10); // Or whatever amount of points
+}
   scoreDisplay.textContent = `Score: ${score}`;
-
-
 
   // Add animation class
 
   scoreDisplay.classList.add("score-boost");
-
-
 
   // Remove it after animation so it can be reused
 

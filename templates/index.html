@@ -1,38 +1,74 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
 
     <meta charset="UTF-8">
-
     <title>Escape the Dungeon</title>
 
     <style>
-
         body {
-
             background-image: url('/static/images/dungeon1.jpg');
-
             background-size: cover;
-
             color: white;
-
             text-align: center;
-
             font-family: sans-serif;
-
             padding-top: 100px;
-
         }
 
         input, button {
-
             padding: 10px;
-
             font-size: 18px;
-
         }
+        .container {
+     text-align: center;
+    margin-top: 100px;
+    }
+
+#timer, #score {
+  font-size: 24px;
+  margin: 10px;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 10px;
+}
+
+.score-boost {
+  animation: score-pop 0.5s ease;
+  will-change: transform;
+}
+
+.timer-warning {
+  animation: pulse-red 1s infinite;
+  font-weight: bold;
+}
+
+@keyframes pulse-red {
+  0% { color: red; transform: scale(1); }
+  50% { color: darkred; transform: scale(1.2); }
+  100% { color: red; transform: scale(1); }
+}
+
+.timer-warning {
+  animation: pulse-red 1s infinite;
+  font-weight: bold;
+}
+
+@keyframes score-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.5); color: gold; }
+  100% { transform: scale(1); color: inherit; }
+}
+
+.score-boost {
+  animation: score-pop 0.5s ease;
+}
+
+textarea {
+  resize: none;
+  font-size: 16px;
+  padding: 10px;
+}
 
     </style>
 
@@ -41,7 +77,8 @@
 <body>
 
     <h1>Escape the Dungeon</h1>
-
+    <div id="timer">Time Left: 60</div>
+    <div id="score">Score: 0</div>
     <h2 id="question">Loading...</h2>
 
     <input id="answer" type="number" placeholder="Your answer" />
@@ -50,52 +87,34 @@
 
     <p id="result"></p>
 
- 
-
     <audio id="correctSound" src="/static/sounds/correct.mp3"></audio>
-
     <audio id="wrongSound" src="/static/sounds/wrong.mp3"></audio>
-
- 
 
     <script>
 
         let currentAnswer = null;
-
         let stage = 1;
-
- 
 
         async function loadQuestion() {
 
             const res = await fetch('/get_question');
-
             const data = await res.json();
 
             document.getElementById('question').innerText = `Solve: ${data.question}`;
-
             currentAnswer = data.answer;
-
         }
-
- 
 
         function changeBackground() {
-
             document.body.style.backgroundImage = `url('/static/images/dungeon${stage}.jpg')`;
-
         }
-
- 
 
         function submitAnswer() {
 
             const userAnswer = parseInt(document.getElementById('answer').value);
-
             const resultEl = document.getElementById('result');
 
             if (userAnswer === currentAnswer) {
-
+                addPoints(10);
                 document.getElementById('correctSound').play();
 
                 resultEl.innerText = "Correct! Moving on...";
@@ -107,34 +126,19 @@
                     resultEl.innerText = "🎉 You escaped the dungeon!";
 
                 } else {
-
                     changeBackground();
-
                     loadQuestion();
-
                 }
-
             } else {
 
                 document.getElementById('wrongSound').play();
-
                 resultEl.innerText = "Wrong! Try again.";
-
             }
-
             document.getElementById('answer').value = "";
-
         }
-
- 
-
         window.onload = loadQuestion;
-
     </script>
-
 </body>
-<div id="timer">Time Left: 60</div>
-
 <script>
 
 let timeLeft = 60;
@@ -145,44 +149,39 @@ const countdown = setInterval(() => {
     if (timeLeft <= 0) {
 
         clearInterval(countdown);
-
         alert("Time's up! Game over!");
 
-        // Optionally reset game or go to game over screen
-
     } else {
-
         timeLeft--;
-
         timerDisplay.textContent = `Time Left: ${timeLeft}`;
-
     }
+    if (timeLeft <= 10) {
+    timerDisplay.classList.add("timer-warning");
+}
 
 }, 1000);
-
 </script>
-<div id="score">Score: 0</div>
 
 <script>
-
 let score = 0;
 
 const scoreDisplay = document.getElementById("score");
 
 function addPoints(points) {
-
     score += points;
-
     scoreDisplay.textContent = `Score: ${score}`;
+    scoreDisplay.classList.add("score-boost");
 
+    // Remove class after animation so it can be reused
+    setTimeout(() => {
+        scoreDisplay.classList.remove("score-boost");
+    }, 500);
 }
 </script>
 <select id="difficulty">
 
     <option value="easy">Easy</option>
-  
     <option value="medium">Medium</option>
-  
     <option value="hard">Hard</option>
   
   </select>
@@ -191,7 +190,6 @@ function addPoints(points) {
   document.getElementById("difficulty").addEventListener("change", (e) => {
   
       difficulty = e.target.value;
-  
   });
   
   </script>

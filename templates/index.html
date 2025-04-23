@@ -133,5 +133,66 @@
     </script>
 
 </body>
+<div id="timer">Time Left: 60</div>
 
+<script>
+
+let timeLeft = 60;
+
+const timerDisplay = document.getElementById("timer");
+const countdown = setInterval(() => {
+
+    if (timeLeft <= 0) {
+
+        clearInterval(countdown);
+
+        alert("Time's up! Game over!");
+
+        // Optionally reset game or go to game over screen
+
+    } else {
+
+        timeLeft--;
+
+        timerDisplay.textContent = `Time Left: ${timeLeft}`;
+
+    }
+
+}, 1000);
+
+</script>
+<div id="score">Score: 0</div>
+
+<script>
+
+let score = 0;
+
+const scoreDisplay = document.getElementById("score");
+
+function addPoints(points) {
+
+    score += points;
+
+    scoreDisplay.textContent = `Score: ${score}`;
+
+}
+</script>
+<select id="difficulty">
+
+    <option value="easy">Easy</option>
+  
+    <option value="medium">Medium</option>
+  
+    <option value="hard">Hard</option>
+  
+  </select>
+  <script>
+  
+  document.getElementById("difficulty").addEventListener("change", (e) => {
+  
+      difficulty = e.target.value;
+  
+  });
+  
+  </script>
 </html>

@@ -3,6 +3,42 @@
   margin-top: 100px;
 }
 
+@keyframes pulse-red {
+
+  0% { color: red; transform: scale(1); }
+
+  50% { color: darkred; transform: scale(1.2); }
+
+  100% { color: red; transform: scale(1); }
+
+}
+
+ 
+
+.timer-warning {
+
+  animation: pulse-red 1s infinite;
+
+  font-weight: bold;
+
+}
+@keyframes score-pop {
+
+  0% { transform: scale(1); }
+
+  50% { transform: scale(1.5); color: gold; }
+
+  100% { transform: scale(1); color: inherit; }
+
+}
+
+ 
+
+.score-boost {
+
+  animation: score-pop 0.5s ease;
+
+}
 textarea {
   resize: none;
   font-size: 16px;

@@ -1,54 +1,91 @@
-const button = document.getElementById('myButton');
-const clickCount = document.getElementById('clickCount');
+const timerDisplay = document.getElementById("timer");
+const countdown = setInterval(() => {
 
-button.addEventListener('click', function() {
-  axios.post('/increment')
-    .then(function(response) {
-      clickCount.textContent = response.data.count;
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-});
+    if (timeLeft <= 0) {
 
-const inputText = document.getElementById('inputText');
-const flipButton = document.getElementById('flipButton');
-const result = document.getElementById('result');
+        clearInterval(countdown);
 
-flipButton.addEventListener('click', function() {
-  const text = inputText.value;
-  axios.post('/flip_case', { text: text })
-    .then(function(response) {
-      result.textContent = response.data.flipped_text;
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-});
-// 🏁 Start Game (Capture the Flag)
-const startGameButton = document.getElementById('startGameButton');
-const gameOutputArea = document.getElementById('gameOutputArea');
+        alert("Time's up! Game over!");
 
-startGameButton.addEventListener('click', function () {
-  axios.post('/play_game')
-    .then(function (response) {
-      gameOutputArea.textContent = response.data.output;
-    })
-    .catch(function (error) {
-      console.log(error);
-      gameOutputArea.textContent = "There was an error starting the game.";
-    });
-});
+    } else {
 
-const gbutton = document.getElementById('myGameButton');
-const gameOutput = document.getElementById('gameOutput');
+        timeLeft--;
 
-gbutton.addEventListener('click', function() {
-  axios.post('/increment2')
-    .then(function(response) {
-      gameOutput.textContent = response.data.gcount;
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-});
+        timerDisplay.textContent = `Time Left: ${timeLeft}`;
+
+        // Add warning animation when 10 seconds or less
+
+        if (timeLeft <= 10) {
+
+            timerDisplay.classList.add("timer-warning");
+
+        }
+
+    }
+
+}, 1000);
+
+
+function addPoints(points) {
+
+  score += points;
+
+  scoreDisplay.textContent = `Score: ${score}`;
+
+
+
+  // Add animation class
+
+  scoreDisplay.classList.add("score-boost");
+
+
+
+  // Remove it after animation so it can be reused
+
+  setTimeout(() => {
+
+      scoreDisplay.classList.remove("score-boost");
+
+  }, 500);
+
+}
+
+let difficulty = "easy";
+
+ 
+
+function generateQuestion() {
+
+    let num1, num2, operator;
+
+ 
+
+    if (difficulty === "easy") {
+
+        num1 = Math.floor(Math.random() * 10);
+
+        num2 = Math.floor(Math.random() * 10);
+
+        operator = "+";
+
+    } else if (difficulty === "medium") {
+
+        num1 = Math.floor(Math.random() * 50);
+
+        num2 = Math.floor(Math.random() * 50);
+
+        operator = ["+", "-"][Math.floor(Math.random() * 2)];
+
+    } else if (difficulty === "hard") {
+
+        num1 = Math.floor(Math.random() * 100);
+
+        num2 = Math.floor(Math.random() * 100);
+
+        operator = ["+", "-", "*", "/"][Math.floor(Math.random() * 4)];
+
+    }
+
+    return { num1, num2, operator };
+
+}

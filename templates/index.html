@@ -97,7 +97,7 @@ textarea {
 
         async function loadQuestion() {
             const difficulty = document.getElementById('difficulty').value;
-            const res = await fetch(`/get_question?difficulty=${difficulty}`);
+            const res = await fetch(`/get_question?difficulty=${difficulty}&t=${new Date().getTime()}`);
             const data = await res.json();
 
             document.getElementById('question').innerText = `Solve: ${data.question}`;

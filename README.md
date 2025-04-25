@@ -1,26 +1,29 @@
-# 🎮 Capture the Flag: Strategy Edition
+# 🧠 Math Game
 
-Welcome to **Capture the Flag: Strategy Edition** — a text-based, decision-driven adventure game where strategy, stats, and teamwork are your path to victory!
-
----
-
-## 🌟 About the Game
-
-In this strategic take on "Capture the Flag," you lead a custom squad of five elite pop-culture-inspired characters through a gauntlet of combat, stealth, and survival challenges. Your mission? Outsmart rival teams, survive enemy ambushes, and **capture the final flag** to win it all!
-
-Each character has unique stats in:
-- **Strength** 🏋️
-- **Intelligence** 🧠
-- **Stamina** 💪
-- **Agility** 🌀
-
-Use these stats wisely as you face surprise events, boss battles, and split-second decisions that determine your team's fate.
+A fun and simple math quiz web game built using Python and Flask! Perfect for practicing your arithmetic skills with three difficulty levels: Easy, Medium, and Hard.
 
 ---
 
-## 🎮 How to Play
+## 🎯 Features
 
-1. **Launch the Game**  
-   Run the Python file in a terminal:
-   ```bash
-   python your_game_file.py
+- Random math questions with basic operations (`+`, `-`, `*`, `/`)
+- Three difficulty levels:
+  - Easy: Numbers 1-10, simple operations
+  - Medium: Numbers 5-20, includes clean division
+  - Hard: Numbers 10-50, all operations
+- Instant answers shown on the web page
+
+---
+
+## 🚀 How to Run the Game (Locally)
+
+### 1. Requirements
+- Python 3.x
+- Flask
+
+### 2. Install Flask
+
+Open your terminal or command prompt and run:
+
+```bash
+pip install flask

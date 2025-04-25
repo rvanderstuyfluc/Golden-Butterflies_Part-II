@@ -79,7 +79,7 @@ textarea {
     <h1>Escape the Dungeon</h1>
     <div id="timer">Time Left: 60</div>
     <div id="score">Score: 0</div>
-    <h2 id="question">Loading...</h2>
+    <p id="current-difficulty"></p>
 
     <input id="answer" type="number" placeholder="Your answer" />
 
@@ -100,7 +100,7 @@ textarea {
             const res = await fetch(`/get_question?difficulty=${difficulty}&t=${new Date().getTime()}`);
             const data = await res.json();
 
-            document.getElementById('question').innerText = `Solve: ${data.question}`;
+            document.getElementById('current-difficulty').innerText = `Difficulty: ${difficulty}`;
             currentAnswer = data.answer;
         }
         
@@ -115,14 +115,25 @@ textarea {
             const resultEl = document.getElementById('result');
 
             if (userAnswer === currentAnswer) {
-                addPoints(10);
+                
+            const difficulty = document.getElementById("difficulty").value;
+            let points = 0;
+            if (difficulty === "easy") points = 10;
+            else if (difficulty === "medium") points = 20;
+            else if (difficulty === "hard") points = 30;
+
+            addPoints(points);
+
+
+
+                
                 document.getElementById('correctSound').play();
 
                 resultEl.innerText = "Correct! Moving on...";
 
                 stage++;
 
-                if (stage > 3) {
+                if (stage > 7) {
 
                     resultEl.innerText = "🎉 You escaped the dungeon!";
 

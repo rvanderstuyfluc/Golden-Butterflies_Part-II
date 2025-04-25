@@ -38,11 +38,6 @@
   will-change: transform;
 }
 
-.timer-warning {
-  animation: pulse-red 1s infinite;
-  font-weight: bold;
-}
-
 @keyframes pulse-red {
   0% { color: red; transform: scale(1); }
   50% { color: darkred; transform: scale(1.2); }
@@ -100,6 +95,7 @@ textarea {
             const res = await fetch(`/get_question?difficulty=${difficulty}&t=${new Date().getTime()}`);
             const data = await res.json();
 
+            document.getElementById('question').innerText = `Solve: ${data.question}`;
             document.getElementById('current-difficulty').innerText = `Difficulty: ${difficulty}`;
             currentAnswer = data.answer;
         }
@@ -111,22 +107,19 @@ textarea {
 
         function submitAnswer() {
 
-            const userAnswer = parseInt(document.getElementById('answer').value);
+            const userAnswer = parseFloat(document.getElementById('answer').value);
             const resultEl = document.getElementById('result');
+            const difficulty = document.getElementById("difficulty").value;
 
             if (userAnswer === currentAnswer) {
-                
-            const difficulty = document.getElementById("difficulty").value;
-            let points = 0;
-            if (difficulty === "easy") points = 10;
-            else if (difficulty === "medium") points = 20;
-            else if (difficulty === "hard") points = 30;
+                // 🎯 Score based on difficulty
+                let points = 0;
+                if (difficulty === "easy") points = 10;
+                else if (difficulty === "medium") points = 20;
+                else if (difficulty === "hard") points = 30;    
+       
+                addPoints(points);
 
-            addPoints(points);
-
-
-
-                
                 document.getElementById('correctSound').play();
 
                 resultEl.innerText = "Correct! Moving on...";
@@ -135,7 +128,7 @@ textarea {
 
                 if (stage > 7) {
 
-                    resultEl.innerText = "🎉 You escaped the dungeon!";
+                    resultEl.innerText = `🎉 You escaped the dungeon with a score of ${score}!`;
 
                 } else {
                     changeBackground();
@@ -148,6 +141,9 @@ textarea {
             }
             document.getElementById('answer').value = "";
         }
+
+
+
         window.onload = loadQuestion;
     </script>
 </body>

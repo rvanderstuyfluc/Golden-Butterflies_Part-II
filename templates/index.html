@@ -96,13 +96,14 @@ textarea {
         let stage = 1;
 
         async function loadQuestion() {
-
-            const res = await fetch('/get_question');
+            const difficulty = document.getElementById('difficulty').value;
+            const res = await fetch(`/get_question?difficulty=${difficulty}`);
             const data = await res.json();
 
             document.getElementById('question').innerText = `Solve: ${data.question}`;
             currentAnswer = data.answer;
         }
+        
 
         function changeBackground() {
             document.body.style.backgroundImage = `url('/static/images/dungeon${stage}.jpg')`;
@@ -187,10 +188,10 @@ function addPoints(points) {
   </select>
   <script>
   
-  document.getElementById("difficulty").addEventListener("change", (e) => {
-  
-      difficulty = e.target.value;
-  });
+document.getElementById("difficulty").addEventListener("change", (e) => {
+    difficulty = e.target.value;
+    loadQuestion(); // Add this line to reload the question
+});
   
   </script>
 </html>

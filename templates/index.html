@@ -75,12 +75,19 @@ textarea {
     <div id="timer">Time Left: 60</div>
     <div id="score">Score: 0</div>
     <p id="current-difficulty"></p>
+    <h2 id="question">Loading...</h2>
 
     <input id="answer" type="number" placeholder="Your answer" />
 
     <button onclick="submitAnswer()">Submit</button>
 
     <p id="result"></p>
+    <div id="end-screen" style="display: none; margin-top: 30px;">
+      <h2>🎉 You escaped the dungeon!</h2>
+      <p id="final-score"></p>
+      <button onclick="restartGame()">Play Again</button>
+    </div>
+    
 
     <audio id="correctSound" src="/static/sounds/correct.mp3"></audio>
     <audio id="wrongSound" src="/static/sounds/wrong.mp3"></audio>
@@ -89,6 +96,7 @@ textarea {
 
         let currentAnswer = null;
         let stage = 1;
+        let gameOver = false;
 
         async function loadQuestion() {
             const difficulty = document.getElementById('difficulty').value;
@@ -106,7 +114,7 @@ textarea {
         }
 
         function submitAnswer() {
-
+            if (gameOver) return; 
             const userAnswer = parseFloat(document.getElementById('answer').value);
             const resultEl = document.getElementById('result');
             const difficulty = document.getElementById("difficulty").value;
@@ -127,9 +135,14 @@ textarea {
                 stage++;
 
                 if (stage > 7) {
+                    gameOver = true;
 
-                    resultEl.innerText = `🎉 You escaped the dungeon with a score of ${score}!`;
-
+                    document.getElementById("question").style.display = "none";
+                    document.getElementById("answer").style.display = "none";
+                    document.getElementById("current-difficulty").style.display = "none";
+                    document.getElementById("result").style.display = "none";
+                    document.getElementById("end-screen").style.display = "block";
+                    document.getElementById("final-score").innerText = `Your Final Score: ${score}`;
                 } else {
                     changeBackground();
                     loadQuestion();
@@ -141,8 +154,29 @@ textarea {
             }
             document.getElementById('answer').value = "";
         }
+        function restartGame() {
+            stage = 1;
+            score = 0;
+            timeLeft = 60; // ✅ Reset timer
+            gameOver = false;
+
+            scoreDisplay.textContent = "Score: 0";
+            timerDisplay.textContent = "Time Left: 60";
+            timerDisplay.classList.remove("timer-warning");
+
+            document.getElementById("end-screen").style.display = "none";
+            document.getElementById("question").style.display = "block";
+            document.getElementById("answer").style.display = "inline";
+            document.getElementById("current-difficulty").style.display = "block";
+            document.getElementById("result").style.display = "block";
+
+            changeBackground();
+            loadQuestion();
+        }        
 
 
+
+        
 
         window.onload = loadQuestion;
     </script>
@@ -195,10 +229,8 @@ function addPoints(points) {
   </select>
   <script>
   
-document.getElementById("difficulty").addEventListener("change", (e) => {
-    difficulty = e.target.value;
-    loadQuestion(); // Add this line to reload the question
+document.getElementById("difficulty").addEventListener("change", () => {
+    loadQuestion(); // difficulty is handled inside the function
 });
-  
   </script>
 </html>

@@ -50,7 +50,10 @@ def generate_question(difficulty="easy"):
 def get_question():
     # Get difficulty from the request parameters
     difficulty = request.args.get('difficulty', 'easy')
-    question, answer = generate_question(difficulty)
+    if difficulty not in ["easy", "medium", "hard"]:
+        difficulty = "easy"
+question, answer = generate_question(difficulty)
+    
     return jsonify({"question": question, "answer": answer})
 
 if __name__ == '__main__':
